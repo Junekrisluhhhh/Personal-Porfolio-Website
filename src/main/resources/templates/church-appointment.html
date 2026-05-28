@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Church Appointment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0e0e0e;
+            color: #f5f5f5;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-primary { background: #e2ff5d; color: #0e0e0e; }
+        .btn-primary:hover { background: #d4f040; }
+        .content-card { background: #141414; border: 1px solid #1f1f1f; border-radius: 20px; padding: 32px; }
+        .section-title { color: #e2ff5d; }
+    </style>
+</head>
+<body>
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="flex flex-col gap-8 lg:flex-row lg:justify-between lg:items-center">
+            <div class="space-y-6">
+                <p class="text-xs uppercase tracking-[0.24em] text-[#6b7280]">Selected Work</p>
+                <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Church Appointment</h1>
+                <p class="max-w-2xl text-base leading-8 text-[#d1d5db]">A dedicated church appointment management app built for scheduling, member coordination, and event tracking.</p>
+                <div class="flex flex-col gap-4 sm:flex-row">
+                    <a href="/" class="btn-primary inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-semibold shadow-lg shadow-black/10 transition hover:-translate-y-0.5">Back to Portfolio</a>
+                    <a href="#details" class="inline-flex items-center justify-center rounded-2xl border border-[#2a2a2a] px-6 py-3 text-sm font-semibold text-white transition hover:border-[#e2ff5d] hover:text-[#e2ff5d]">View Details</a>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <img class="h-56 w-full rounded-[26px] object-cover" src="https://images.unsplash.com/photo-1508973371-1e69af1cc5fd?w=900&q=80" alt="Church appointment app preview" />
+                <img class="h-56 w-full rounded-[26px] object-cover" src="https://images.unsplash.com/photo-1485841890310-6a055c88698a?w=900&q=80" alt="Church scheduling preview" />
+            </div>
+        </div>
+
+        <section id="details" class="mt-14 space-y-8">
+            <div class="content-card">
+                <h2 class="text-2xl font-bold section-title">What this project does</h2>
+                <p class="mt-4 text-sm leading-7 text-[#d1d5db]">This application streamlines church appointment scheduling for members and pastors, with booking workflows, event calendars, and appointment management features.</p>
+            </div>
+
+            <div class="grid gap-6 lg:grid-cols-3">
+                <div class="content-card">
+                    <h3 class="font-semibold text-white">Scheduling</h3>
+                    <p class="mt-3 text-sm leading-7 text-[#d1d5db]">Book appointments, reserve meeting slots, and see availability in a clean calendar interface.</p>
+                </div>
+                <div class="content-card">
+                    <h3 class="font-semibold text-white">Member Coordination</h3>
+                    <p class="mt-3 text-sm leading-7 text-[#d1d5db]">Manage participant contact details, service requests, and follow-up tasks.</p>
+                </div>
+                <div class="content-card">
+                    <h3 class="font-semibold text-white">Event Tracking</h3>
+                    <p class="mt-3 text-sm leading-7 text-[#d1d5db]">Keep appointments organized with event labels, statuses, and reminders.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

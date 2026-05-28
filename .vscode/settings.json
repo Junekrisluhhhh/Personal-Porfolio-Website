@@ -1,0 +1,9 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "chat.tools.terminal.autoApprove": {
+        "/^cmd /C set \"JAVA_HOME=C:\\\\Users\\\\CJ\\\\\\.jdk\\\\jdk-25\\.0\\.2\" && \"C:\\\\Users\\\\CJ\\\\\\.maven\\\\maven-3\\.9\\.16\\\\bin\\\\mvn\\.cmd\" clean test-compile -q$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

@@ -1,0 +1,4 @@
+com\portfolio\PortfolioApplication.class
+com\portfolio\repository\ProjectRepository.class
+com\portfolio\controller\PortfolioController.class
+com\portfolio\entity\Project.class

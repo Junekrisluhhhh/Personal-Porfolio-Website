@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Portfolio | Full-Stack Developer</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark:    '#0e0e0e',
+                        surface: '#161616',
+                        card:    '#1c1c1c',
+                        border:  '#2a2a2a',
+                        muted:   '#6b7280',
+                        accent:  '#e2ff5d',
+                    },
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        body:    ['DM Sans', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #0e0e0e;
+            color: #f5f5f5;
+            font-family: 'DM Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0e0e0e; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .font-display { font-family: 'Syne', sans-serif; }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-accent-gradient {
+            background: linear-gradient(135deg, #e2ff5d 0%, #b8d400 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .accent-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            background: #e2ff5d;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #e2ff5d, 0 0 24px rgba(226,255,93,0.4);
+            animation: pulse-dot 2.5s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 12px #e2ff5d, 0 0 24px rgba(226,255,93,0.4); }
+            50%       { opacity: 0.7; box-shadow: 0 0 6px #e2ff5d, 0 0 12px rgba(226,255,93,0.2); }
+        }
+
+        .nav-link {
+            position: relative;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: #9ca3af;
+            letter-spacing: 0.02em;
+            transition: color 0.25s ease;
+            text-decoration: none;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 1px;
+            background: #e2ff5d;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover { color: #f5f5f5; }
+        .nav-link:hover::after { width: 100%; }
+
+        .stat-num {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #f5f5f5;
+            line-height: 1;
+        }
+
+        .project-card {
+            background: #161616;
+            border: 1px solid #1f1f1f;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(.22,.68,0,1.2), border-color 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        .project-card:hover {
+            transform: translateY(-6px) !important;
+            border-color: #2e2e2e;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(226,255,93,0.08);
+        }
+        .project-card:hover .card-img { transform: scale(1.05); }
+        .card-img { transition: transform 0.5s cubic-bezier(.22,.68,0,1.2); width: 100%; object-fit: cover; }
+
+        .tech-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            background: rgba(226,255,93,0.08);
+            color: #e2ff5d;
+            border: 1px solid rgba(226,255,93,0.15);
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: #e2ff5d;
+            color: #0e0e0e;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+        }
+        .btn-primary:hover {
+            background: #d4f040;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(226,255,93,0.3);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: #f5f5f5;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: border-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+        }
+        .btn-outline:hover {
+            border-color: #e2ff5d;
+            color: #e2ff5d;
+            transform: translateY(-2px);
+        }
+
+        .btn-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 20px;
+            background: rgba(226,255,93,0.08);
+            color: #e2ff5d;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 1px solid rgba(226,255,93,0.2);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.25s ease, transform 0.2s ease;
+        }
+        .btn-card:hover {
+            background: rgba(226,255,93,0.15);
+            transform: translateY(-1px);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px; left: 0;
+            width: 40px; height: 3px;
+            background: #e2ff5d;
+            border-radius: 2px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 14px 18px;
+            color: #f5f5f5;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .form-input::placeholder { color: #4b5563; }
+        .form-input:focus {
+            border-color: #e2ff5d;
+            box-shadow: 0 0 0 3px rgba(226,255,93,0.08);
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e2ff5d, #b8d400);
+            border-radius: 999px;
+            position: relative;
+            overflow: hidden;
+        }
+        .skill-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+        @keyframes shimmer {
+            0%   { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .section-divider { border: none; border-top: 1px solid #1a1a1a; }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: #6b7280;
+            transition: color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+        .social-link:hover {
+            color: #e2ff5d;
+            border-color: rgba(226,255,93,0.3);
+            transform: translateY(-2px);
+        }
+
+        .avail-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            background: rgba(226,255,93,0.07);
+            border: 1px solid rgba(226,255,93,0.18);
+            border-radius: 999px;
+            font-size: 0.78rem;
+            color: #e2ff5d;
+            font-weight: 500;
+        }
+
+        .marquee-wrap { overflow: hidden; }
+        .marquee-track {
+            display: flex;
+            gap: 40px;
+            animation: marquee 25s linear infinite;
+            white-space: nowrap;
+        }
+        @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-8px); }
+        }
+        .float-1 { animation: floatUp 4s ease-in-out infinite; }
+        .float-2 { animation: floatUp 4s ease-in-out 1s infinite; }
+        .float-3 { animation: floatUp 4s ease-in-out 2s infinite; }
+
+        @keyframes heroFadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero-1 { animation: heroFadeUp 0.7s ease 0.05s forwards; opacity: 0; }
+        .hero-2 { animation: heroFadeUp 0.7s ease 0.15s forwards; opacity: 0; }
+        .hero-3 { animation: heroFadeUp 0.7s ease 0.25s forwards; opacity: 0; }
+        .hero-4 { animation: heroFadeUp 0.7s ease 0.35s forwards; opacity: 0; }
+        .hero-5 { animation: heroFadeUp 0.7s ease 0.50s forwards; opacity: 0; }
+        .hero-img { animation: heroFadeUp 0.9s ease 0.30s forwards; opacity: 0; }
+
+        .tool-tile {
+            background: #161616;
+            border: 1px solid #1f1f1f;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: border-color 0.25s ease, transform 0.2s ease;
+            cursor: default;
+        }
+        .tool-tile:hover {
+            border-color: rgba(226,255,93,0.25);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+
+<body class="relative" style="z-index:1;">
+
+<!-- ══════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════ -->
+<header id="top" class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 lg:px-16 py-5"
+        style="backdrop-filter:blur(20px);background:rgba(14,14,14,0.88);border-bottom:1px solid rgba(255,255,255,0.04);">
+
+    <a href="#top" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:32px;height:32px;background:#e2ff5d;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#0e0e0e;">JM</span>
+        </div>
+        <span class="font-display font-semibold text-white text-sm tracking-wide hidden sm:inline">June Chrysler L. Mangyao</span>
+    </a>
+
+    <nav style="display:flex;align-items:center;gap:32px;">
+        <a href="#about"    class="nav-link">About</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#skills"   class="nav-link">Skills</a>
+        <a href="#contact"  class="nav-link">Contact</a>
+    </nav>
+
+    <a href="#contact" class="btn-primary hidden md:inline-flex" style="padding:10px 20px;font-size:0.82rem;">
+        Hire Me
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+</header>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="about" class="min-h-screen flex flex-col justify-center pt-28 pb-20 px-8 lg:px-16"
+         style="max-width:1280px;margin:0 auto;">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+        <!-- Text -->
+        <div>
+            <div class="avail-badge hero-1" style="margin-bottom:28px;">
+                <span class="accent-dot"></span>
+                Available for new projects
+            </div>
+
+            <h1 class="font-display font-extrabold hero-2"
+                style="font-size:clamp(3rem,7vw,5.5rem);line-height:1.0;margin-bottom:24px;">
+                <span style="color:#f5f5f5;">Full-Stack</span><br/>
+                <span class="text-accent-gradient">Developer</span><br/>
+                <span style="color:#f5f5f5;">&amp; Designer.</span>
+            </h1>
+
+            <p class="hero-3" style="color:#9ca3af;font-size:1.1rem;line-height:1.75;margin-bottom:36px;max-width:480px;font-weight:300;">
+                Passionate full-stack developer crafting innovative web solutions. Specializing in modern technologies to build scalable and user-friendly applications.
+            </p>
+
+            <div class="hero-4" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:48px;">
+                <a href="#projects" class="btn-primary">
+                    View My Work
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </a>
+                <a href="#contact" class="btn-outline">Get In Touch</a>
+            </div>
+
+            <div class="hero-5" style="display:flex;align-items:center;gap:32px;padding-top:28px;border-top:1px solid #1f1f1f;">
+                <div>
+                    <p class="stat-num">2+</p>
+                    <p style="color:#6b7280;font-size:0.82rem;margin-top:4px;">Years Experience</p>
+                </div>
+                <div style="width:1px;height:44px;background:#1f1f1f;"></div>
+                <div>
+                    <p class="stat-num">10+</p>
+                    <p style="color:#6b7280;font-size:0.82rem;margin-top:4px;">Projects Completed</p>
+                </div>
+                <div style="width:1px;height:44px;background:#1f1f1f;"></div>
+                <div>
+                    <p class="stat-num">100%</p>
+                    <p style="color:#6b7280;font-size:0.82rem;margin-top:4px;">Dedication</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile visual -->
+        <div class="hero-img" style="display:flex;justify-content:flex-end;padding-right:40px;margin-top:80px;">
+            <div style="position:relative;">
+                <!-- Glow ring -->
+                <div style="position:absolute;inset:-2px;border-radius:24px;background:linear-gradient(135deg,rgba(226,255,93,0.25),transparent 65%);z-index:0;"></div>
+                <!-- Card -->
+                <div style="position:relative;z-index:1;width:300px;height:380px;border-radius:22px;overflow:hidden;background:#161616;border:1px solid #1f1f1f;">
+                    <img src="/images/profile.jpg"
+                         alt="June Chrysler L. Mangyao"
+                         style="width:100%;height:100%;object-fit:cover;object-position:center 25%;"/>
+                    <div style="position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,rgba(14,14,14,0.95),transparent);"></div>
+                    <!-- Name badge -->
+                    <div style="position:absolute;bottom:18px;left:16px;right:16px;background:rgba(18,18,18,0.92);backdrop-filter:blur(12px);border:1px solid #2a2a2a;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+                        <div style="width:34px;height:34px;background:rgba(226,255,93,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e2ff5d" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </div>
+                        <div>
+                            <p style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:#f5f5f5;">June Chrysler L. Mangyao</p>
+                            <p style="font-size:0.7rem;color:#6b7280;margin-top:1px;">Full-Stack Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Marquee tech strip -->
+<div style="overflow:hidden;border-top:1px solid #161616;border-bottom:1px solid #161616;padding:16px 0;background:#111111;">
+    <div class="marquee-track">
+        <span th:each="t : ${ {'Java','Spring Boot','Hibernate','MySQL','Maven','React','TypeScript','JavaScript','CSS (Bootstrap 5 & Tailwind)','HTML','Git','PHP','Thymeleaf','Java','Spring Boot','Hibernate','MySQL','Maven','React','TypeScript','JavaScript','CSS (Bootstrap 5 & Tailwind)','HTML','Git','PHP','Thymeleaf'} }">
+        </span>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PROJECTS
+══════════════════════════════════════ -->
+<section id="projects" class="py-28 px-8 lg:px-16" style="max-width:1280px;margin:0 auto;">
+
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:56px;">
+        <div>
+            <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;margin-bottom:10px;">Portfolio</p>
+            <h2 class="section-title font-display font-extrabold text-white"
+                style="font-size:clamp(2rem,4vw,3rem);">Selected Work</h2>
+        </div>
+        <p style="color:#6b7280;font-size:0.875rem;max-width:280px;line-height:1.65;">
+            A curated selection of projects that showcase my technical depth and design sensibility.
+        </p>
+    </div>
+
+    <!-- Dynamic project grid from DB -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="projectGrid">
+
+        <article class="project-card"
+                 th:each="project, iterStat : ${projects}"
+                 th:classappend="${iterStat.index == 0} ? ' md:col-span-2' : ''">
+
+            <!-- Featured image (taller for first card) -->
+            <div style="overflow:hidden;">
+                <img class="card-img"
+                     th:src="${project.imagePath}"
+                     th:alt="${project.title}"
+                     th:style="${iterStat.index == 0} ? 'height:340px;' : 'height:220px;'"/>
+            </div>
+
+            <!-- Body -->
+            <div style="padding:24px;">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;">
+                    <h3 class="font-display font-bold text-white"
+                        style="font-size:1.12rem;line-height:1.3;"
+                        th:text="${project.title}">Project Title</h3>
+                    <span style="font-family:monospace;font-size:0.72rem;color:#3a3a3a;flex-shrink:0;padding-top:2px;"
+                          th:text="'#0' + ${iterStat.count}">#01</span>
+                </div>
+
+                <p style="color:#6b7280;font-size:0.875rem;line-height:1.7;margin-bottom:20px;font-weight:300;"
+                   th:text="${project.description}">Project description.</p>
+
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;">
+                    <span class="tech-tag" th:each="tech : ${project.techList}" th:text="${tech}">Tag</span>
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #1f1f1f;">
+                    <a class="btn-card" th:href="${project.projectUrl}" target="_blank" rel="noopener">
+                        View Project
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                    </a>
+                    <a href="#" class="social-link" title="Source code" style="width:36px;height:36px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Empty state -->
+        <div th:if="${#lists.isEmpty(projects)}"
+             style="grid-column:span 2;text-align:center;padding:80px 20px;color:#4b5563;">
+            <p class="font-display" style="font-size:1.25rem;color:#6b7280;">No projects found in the database.</p>
+            <p style="font-size:0.875rem;margin-top:8px;">Visit <code style="color:#e2ff5d;">/h2-console</code> to inspect the H2 database.</p>
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider" style="margin:0 32px;"/>
+
+
+<!-- ══════════════════════════════════════
+     SKILLS
+══════════════════════════════════════ -->
+<section id="skills" class="py-28 px-8 lg:px-16" style="max-width:1280px;margin:0 auto;">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+        <!-- Proficiency bars -->
+        <div>
+            <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;margin-bottom:10px;">Expertise</p>
+            <h2 class="section-title font-display font-extrabold text-white"
+                style="font-size:clamp(2rem,4vw,3rem);margin-bottom:48px;">My Skills</h2>
+
+            <div style="display:flex;flex-direction:column;gap:24px;">
+                <div th:each="skill : ${ {{'Java / Spring Boot','95'},{'Web development','88'},{'Networking','82'},{'Databases & SQL','90'},{'System Design','78'}} }">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span class="font-display" style="font-weight:600;color:#e5e7eb;font-size:0.875rem;" th:text="${skill[0]}">Skill</span>
+                        <span style="font-family:monospace;font-size:0.75rem;color:#6b7280;" th:text="${skill[1] + '%'}">0%</span>
+                    </div>
+                    <div style="height:4px;background:#1a1a1a;border-radius:999px;overflow:hidden;">
+                        <div class="skill-bar-fill" th:style="'width:' + ${skill[1]} + '%'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbox grid -->
+        <div>
+            <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;margin-bottom:10px;">Toolbox</p>
+            <h2 class="font-display font-extrabold text-white"
+                style="font-size:clamp(2rem,4vw,3rem);margin-bottom:48px;">Technologies</h2>
+
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+                <div class="tool-tile"
+                     th:each="tool : ${ {'Java','Spring Boot','Hibernate','MySQL','Maven','React','TypeScript','JavaScript','HTML','CSS','Bootstrap 5','Tailwind','Git','PHP','Thymeleaf'} }">
+                    <span class="font-display" style="font-weight:600;color:#d1d5db;font-size:0.78rem;" th:text="${tool}">Tool</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider" style="margin:0 32px;"/>
+
+
+<!-- ══════════════════════════════════════
+     CONTACT
+══════════════════════════════════════ -->
+<section id="contact" class="py-28 px-8 lg:px-16" style="max-width:1280px;margin:0 auto;">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+        <!-- Info column -->
+        <div>
+            <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;margin-bottom:10px;">Contact</p>
+            <h2 class="section-title font-display font-extrabold text-white"
+                style="font-size:clamp(2rem,4vw,3rem);margin-bottom:24px;">
+                Let's Build<br/>Something Great.
+            </h2>
+
+            <p style="color:#9ca3af;line-height:1.75;margin-bottom:40px;font-weight:300;max-width:400px;">
+                I'm open to freelance projects, full-time opportunities, and technical collaborations.
+                Whether you have a project in mind or just want to connect — my inbox is always open.
+            </p>
+
+            <!-- Contact details -->
+            <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:40px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                    <div style="width:40px;height:40px;background:#161616;border:1px solid #2a2a2a;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e2ff5d" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div>
+                        <p style="font-size:0.72rem;color:#6b7280;margin-bottom:2px;">Email</p>
+                        <a href="mailto:junechryslerm@gmail.com" style="font-size:0.875rem;color:#e5e7eb;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#e2ff5d'" onmouseout="this.style.color='#e5e7eb'">junechryslerm@gmail.com</a>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:14px;">
+                    <div style="width:40px;height:40px;background:#161616;border:1px solid #2a2a2a;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e2ff5d" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div>
+                        <p style="font-size:0.72rem;color:#6b7280;margin-bottom:2px;">Location</p>
+                        <span style="font-size:0.875rem;color:#e5e7eb;">Philippines · Remote Available</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social icons -->
+            <div style="display:flex;gap:10px;">
+                <a href="https://github.com/Junekrisluhhhh" class="social-link" title="GitHub">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/june-chrysler-mangyao-913389249/" class="social-link" title="LinkedIn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </a>
+                <a href="https://www.instagram.com/june.krisluhhhh/" class="social-link" title="Instagram">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact form -->
+        <div style="background:#141414;border:1px solid #1f1f1f;border-radius:20px;padding:36px;">
+            <h3 class="font-display font-bold text-white" style="font-size:1.25rem;margin-bottom:24px;">Send a Message</h3>
+            <div th:if="${emailStatus}" style="margin-bottom:18px;padding:16px;border-radius:14px;background:#111827;border:1px solid #2a2a2a;color:#d1fae5;">
+                <span th:text="${emailStatus}"></span>
+            </div>
+
+            <form action="#" method="post">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+                    <div>
+                        <label style="display:block;font-size:0.72rem;color:#6b7280;margin-bottom:6px;font-weight:500;">First Name</label>
+                        <input type="text" name="firstName" placeholder="John" class="form-input"/>
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:0.72rem;color:#6b7280;margin-bottom:6px;font-weight:500;">Last Name</label>
+                        <input type="text" name="lastName" placeholder="Doe" class="form-input"/>
+                    </div>
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block;font-size:0.72rem;color:#6b7280;margin-bottom:6px;font-weight:500;">Email Address</label>
+                    <input type="email" name="email" placeholder="john@example.com" class="form-input"/>
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block;font-size:0.72rem;color:#6b7280;margin-bottom:6px;font-weight:500;">Subject</label>
+                    <input type="text" name="subject" placeholder="Project inquiry" class="form-input"/>
+                </div>
+                <div style="margin-bottom:24px;">
+                    <label style="display:block;font-size:0.72rem;color:#6b7280;margin-bottom:6px;font-weight:500;">Message</label>
+                    <textarea name="message" rows="4" placeholder="Tell me about your project..."
+                              class="form-input" style="resize:none;"></textarea>
+                </div>
+                <button type="submit" class="btn-primary"
+                        style="width:100%;justify-content:center;padding:14px 24px;">
+                    Send Message
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer style="border-top:1px solid #161616;background:#0a0a0a;">
+    <div style="max-width:1280px;margin:0 auto;padding:32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:28px;height:28px;background:#e2ff5d;border-radius:7px;display:flex;align-items:center;justify-content:center;">
+                <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:#0e0e0e;">JM</span>
+            </div>
+            <span style="color:#4b5563;font-size:0.82rem;">© 2024 June Chrysler L. Mangyao. All rights reserved.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;color:#4b5563;font-size:0.82rem;">
+            <span>Powered by</span>
+            <span class="font-display" style="font-weight:600;color:#6b7280;">Spring Boot 3</span>
+            <span>+</span>
+            <span class="font-display" style="font-weight:600;color:#6b7280;">Thymeleaf</span>
+            <span>+</span>
+            <span class="font-display" style="font-weight:600;color:#6b7280;">H2</span>
+        </div>
+        <a href="#top" class="social-link" title="Back to top" style="width:36px;height:36px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+        </a>
+    </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════
+     JS: Scroll reveal for project cards
+══════════════════════════════════════ -->
+<script>
+(function () {
+    // Reveal project cards on scroll
+    const cards = document.querySelectorAll('.project-card');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(.22,.68,0,1.2)';
+                    entry.target.style.opacity    = '1';
+                    entry.target.style.transform  = 'translateY(0)';
+                }, i * 120);
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(c => obs.observe(c));
+
+    // Animate skill bars when in view
+    const bars = document.querySelectorAll('.skill-bar-fill');
+    const barObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const targetW = entry.target.style.width;
+                entry.target.style.width = '0%';
+                entry.target.style.transition = 'width 1.2s cubic-bezier(.22,.68,0,1.2)';
+                requestAnimationFrame(() => {
+                    setTimeout(() => { entry.target.style.width = targetW; }, 80);
+                });
+                barObs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    bars.forEach(b => barObs.observe(b));
+
+    // Active nav highlight
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks  = document.querySelectorAll('.nav-link');
+    const secObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    const active = link.getAttribute('href') === '#' + entry.target.id;
+                    link.style.color = active ? '#f5f5f5' : '#9ca3af';
+                });
+            }
+        });
+    }, { threshold: 0.45 });
+
+    sections.forEach(s => secObs.observe(s));
+})();
+</script>
+
+</body>
+</html>
