@@ -53,6 +53,11 @@ public class PortfolioController {
         return "church-appointment";
     }
 
+    @GetMapping("/trendvelle")
+    public String trendvelle() {
+        return "trendvelle";
+    }
+
     @PostMapping({"/", "/index"})
     public String handleContactForm(
             @RequestParam(name = "firstName", required = false) String firstName,

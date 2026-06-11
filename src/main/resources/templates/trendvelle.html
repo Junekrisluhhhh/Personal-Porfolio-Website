@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trendvelle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0e0e0e;
+            color: #f5f5f5;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-primary { background: #e2ff5d; color: #0e0e0e; }
+        .btn-primary:hover { background: #d4f040; }
+        .content-card { background: #141414; border: 1px solid #1f1f1f; border-radius: 20px; padding: 32px; }
+        .section-title { color: #e2ff5d; }
+    </style>
+</head>
+<body>
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="flex flex-col gap-8 lg:flex-row lg:justify-between lg:items-center">
+            <div class="space-y-6">
+                <p class="text-xs uppercase tracking-[0.24em] text-[#6b7280]">Selected Work</p>
+                <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Trendvelle</h1>
+                <p class="max-w-2xl text-base leading-8 text-[#d1d5db]">A modern e-commerce experience built to showcase fashion collections, manage shopping workflows, and deliver a polished checkout journey.</p>
+                <div class="flex flex-col gap-4 sm:flex-row">
+                    <a href="/" class="btn-primary inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-semibold shadow-lg shadow-black/10 transition hover:-translate-y-0.5">Back to Portfolio</a>
+                    <a href="https://github.com/Junekrisluhhhh/Trendvelle" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-2xl border border-[#2a2a2a] px-6 py-3 text-sm font-semibold text-white transition hover:border-[#e2ff5d] hover:text-[#e2ff5d]">View in Github</a>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <img class="h-56 w-full rounded-[26px] object-cover" src="https://images.unsplash.com/photo-1521334884684-d80222895322?w=900&q=80" alt="Trendvelle showcase" />
+                <img class="h-56 w-full rounded-[26px] object-cover" src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900&q=80" alt="Trendvelle shopping experience" />
+            </div>
+        </div>
+
+        <section id="details" class="mt-14 space-y-8">
+            <div class="content-card">
+                <h2 class="text-2xl font-bold section-title">What this project does</h2>
+                <p class="mt-4 text-sm leading-7 text-[#d1d5db]">Trendvelle brings fashion product discovery to the web with responsive product displays, intuitive cart flows, and modern e-commerce UI patterns.</p>
+            </div>
+
+            <div class="grid gap-6 lg:grid-cols-3">
+                <div class="content-card">
+                    <h3 class="font-semibold text-white">Product Catalog</h3>
+                    <p class="mt-3 text-sm leading-7 text-[#d1d5db]">Browse featured collections, filter by category, and view product details in a mobile-first layout.</p>
+                </div>
+                <div class="content-card">
+                    <h3 class="font-semibold text-white">Shopping Experience</h3>
+                    <p class="mt-3 text-sm leading-7 text-[#d1d5db]">Add items to cart, manage quantities, and proceed through checkout workflows with a clean interface.</p>
+                </div>
+                <div class="content-card">
+                    <h3 class="font-semibold text-white">Order Flow</h3>
+                    <p class="mt-3 text-sm leading-7 text-[#d1d5db]">Track shopping progress from selection to payment with intuitive steps and order summary features.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

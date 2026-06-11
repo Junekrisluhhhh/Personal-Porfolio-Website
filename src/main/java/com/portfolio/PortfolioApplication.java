@@ -27,6 +27,16 @@ public class PortfolioApplication {
                 repository.save(project);
             }
 
+            Optional<Project> existingPersonalPortfolio = repository.findByTitle("Personal portfolio");
+            if (existingPersonalPortfolio.isPresent()) {
+                Project project = existingPersonalPortfolio.get();
+                project.setTitle("Trendvelle");
+                project.setDescription("An e-commerce website showcasing fashion products and shopping workflows.");
+                project.setProjectUrl("/trendvelle");
+                project.setTechnologies("HTML, CSS, JavaScript");
+                repository.save(project);
+            }
+
             Optional<Project> existingWebApp = repository.findByTitle("Web Application");
             if (existingWebApp.isPresent()) {
                 Project project = existingWebApp.get();
@@ -39,7 +49,7 @@ public class PortfolioApplication {
             if (repository.count() == 0) {
                 repository.save(new Project(null, "Photography Portfolio Website", "A photography portfolio website with a dedicated photo workflow showcase.", "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80", "Spring Boot, Thymeleaf, H2", "/photo-workflow"));
                 repository.save(new Project(null, "Church Appointment", "A church appointment scheduling app with booking workflows and member coordination.", "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&q=80", "HTML, CSS, JavaScript", "/church-appointment"));
-                repository.save(new Project(null, "Mobile App", "A cross-platform mobile application.", "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80", "React Native, Firebase", "https://github.com/Junekrisluhhhh"));
+                repository.save(new Project(null, "Trendvelle", "An e-commerce website showcasing fashion products and shopping workflows.", "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80", "HTML, CSS, JavaScript", "/trendvelle"));
             }
         };
     }
